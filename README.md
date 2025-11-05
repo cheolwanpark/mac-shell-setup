@@ -72,19 +72,30 @@ exec zsh
 ## Key Shortcuts
 
 ### Tmux
-- **Ctrl+y** - Open Yazi file manager
-- **Ctrl+g** - Open Lazygit
-- **Ctrl+f** - Open FZF file search
-- **Ctrl+z** - Open popup shell
-- **Ctrl+r** - Reload config
+**Prefix**: `Ctrl+a` (instead of default `Ctrl+b`)
+
+To use any tmux command, press `Ctrl+a` first, then the key:
+- **Prefix+y** (Ctrl+a then y) - Open Yazi file manager
+- **Prefix+g** (Ctrl+a then g) - Open Lazygit
+- **Prefix+f** (Ctrl+a then f) - Open FZF file search
+- **Prefix+t** (Ctrl+a then t) - Open popup shell
+- **Prefix+?** (Ctrl+a then ?) - Show shortcuts reference
+- **Prefix+\\** (Ctrl+a then \\) - Vertical split (top-bottom)
+- **Prefix+-** (Ctrl+a then -) - Horizontal split (side-by-side)
+- **Prefix+r** (Ctrl+a then r) - Reload config
+
+**Note**: Window splits replace default `%` and `"` bindings. To send a literal `Ctrl+a` to the shell (e.g., to move cursor to beginning of line), press `Ctrl+a` twice (i.e., `Ctrl+a Ctrl+a`).
 
 ### Kitty (if installed)
-- **Cmd+y** - Open Yazi
-- **Cmd+g** - Open Lazygit
-- **Cmd+f** - Open FZF search
-- **Cmd+z** - Open popup shell
-- **Cmd+s** - Save
+Kitty is configured to pass tmux prefix shortcuts seamlessly:
+- **Cmd+a** - Sends tmux prefix (Ctrl+a) to tmux
 - **Cmd+t** - New tab in current directory
+
+To use tmux commands in Kitty, press **Cmd+a** first (sends the prefix), then press the command key:
+- **Cmd+a, then y** - Open Yazi
+- **Cmd+a, then g** - Open Lazygit
+- **Cmd+a, then f** - Open FZF search
+- **Cmd+a, then t** - Open popup shell
 
 ### Helix
 - **Ctrl+y** - Open Yazi
