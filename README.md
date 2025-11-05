@@ -75,12 +75,14 @@ exec zsh
 - **Ctrl+y** - Open Yazi file manager
 - **Ctrl+g** - Open Lazygit
 - **Ctrl+f** - Open FZF file search
+- **Ctrl+z** - Open popup shell
 - **Ctrl+r** - Reload config
 
 ### Kitty (if installed)
 - **Cmd+y** - Open Yazi
 - **Cmd+g** - Open Lazygit
 - **Cmd+f** - Open FZF search
+- **Cmd+z** - Open popup shell
 - **Cmd+s** - Save
 - **Cmd+t** - New tab in current directory
 
