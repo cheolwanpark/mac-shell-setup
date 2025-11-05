@@ -1,0 +1,12 @@
+# additional setup
+export EDITOR="hx"
+export PATH="$HOME/scripts:$PATH"
+
+# FZF configuration
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --inline-info'
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+
+# Source fzf shell integration (key bindings and completion)
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

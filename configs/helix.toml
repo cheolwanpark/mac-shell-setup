@@ -1,0 +1,41 @@
+# ~/.config/helix/config.toml
+
+theme = "default"
+
+[editor]
+line-number = "absolute"
+mouse = true
+cursorline = true
+bufferline = "multiple"
+true-color = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[keys.normal]
+# Helix (ctrl + y)
+C-y = [
+  ':sh rm -f /tmp/yazi-helix-choice',
+  ':insert-output yazi %{buffer_name} --chooser-file=/tmp/yazi-helix-choice',
+  ':redraw',
+  ':set mouse false',
+  ':set mouse true',
+  ':open /tmp/yazi-helix-choice',
+  'select_all',
+  'split_selection_on_newline',
+  'goto_file',
+  ':buffer-close! /tmp/yazi-helix-choice',
+]
+
+# Helix (ctrl + g)
+C-g = ":sh tmux popup -d \"#{pane_current_path}\" -xC -yC -w80% -h80% -E lazygit"
+
+# save shortcut (ctrl + s)
+C-s = ":w"
+
+# buffer transition
+"A-," = "goto_previous_buffer"
+"A-." = "goto_next_buffer"
+"A-w" = ":buffer-close"

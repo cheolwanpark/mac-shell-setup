@@ -1,0 +1,23 @@
+#!/bin/bash
+# FZF file search for tmux popup
+# Opens fzf to search files and sends selected file to helix in the target pane
+
+# Get the target pane ID (passed as first argument)
+target_pane="$1"
+
+# Validate that a pane ID was provided
+if [ -z "$target_pane" ]; then
+  echo "Error: No tmux pane ID provided" >&2
+  exit 1
+fi
+
+# Search for files using fd and let user select with fzf
+# The || true prevents script from exiting if user cancels (Esc)
+selected=$(fd --type f --hidden --follow --exclude .git | \
+  fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' || true)
+
+# If a file was selected, send command to open it in helix
+# Use printf %q to properly escape filenames with special characters
+if [ -n "$selected" ]; then
+  tmux send-keys -t "$target_pane" "hx $(printf '%q' "$selected")" Enter
+fi

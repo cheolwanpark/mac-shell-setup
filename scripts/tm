@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# no argument, create new session with TTY name
+if [ -z "$1" ]; then
+    TTY_NAME=$(tty | sed 's/\/dev\///' | sed 's/\//-/g')
+    SESSION_NAME="tty-${TTY_NAME}"
+    
+    # check if there is session with the name
+    if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+        echo "Error: Session '$SESSION_NAME' already exists!"
+        echo "Use 'tmux kill-session -t $SESSION_NAME' to remove it first."
+        exit 1
+    fi
+    
+    # create new session, auto destroyed
+    tmux new-session -s "$SESSION_NAME" \; \
+         set-option -t "$SESSION_NAME" destroy-unattached on
+
+# has argument, create new session or attach to the session with the name
+else
+    SESSION_NAME="$1"
+    
+    # check if there is session with the name
+    if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+        # attach to it if exists
+        tmux attach-session -t "$SESSION_NAME"
+    else
+        # create new one
+        tmux new-session -s "$SESSION_NAME"
+    fi
+fi
