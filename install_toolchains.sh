@@ -50,21 +50,32 @@ else
             success "uv installed successfully"
 
             # uv installs to ~/.local/bin by default
-            UV_BIN="$HOME/.local/bin"
-
-            # Check if ~/.local/bin is in PATH via .zprofile
             ZPROFILE="${HOME}/.zprofile"
             touch "$ZPROFILE"
 
-            if ! grep -q "/.local/bin" "$ZPROFILE"; then
-                info "Adding $UV_BIN to PATH in .zprofile..."
-                echo "" >> "$ZPROFILE"
-                echo "# uv (Python package manager)" >> "$ZPROFILE"
-                echo "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> "$ZPROFILE"
-                success "PATH updated in .zprofile"
+            # Define markers for idempotent updates
+            BEGIN_MARKER="# BEGIN mac-shell-setup: uv"
+            END_MARKER="# END mac-shell-setup: uv"
+
+            # Check if our section already exists
+            if grep -q "$BEGIN_MARKER" "$ZPROFILE"; then
+                info "Updating existing uv section in .zprofile..."
+                # Remove old section
+                awk "/$BEGIN_MARKER/,/$END_MARKER/{next} 1" "$ZPROFILE" > "${ZPROFILE}.tmp"
+                mv "${ZPROFILE}.tmp" "$ZPROFILE"
             else
-                info "~/.local/bin already in PATH"
+                info "Adding uv to PATH in .zprofile..."
             fi
+
+            # Append new section with markers
+            {
+                echo ""
+                echo "$BEGIN_MARKER"
+                echo "export PATH=\"\$HOME/.local/bin:\$PATH\""
+                echo "$END_MARKER"
+            } >> "$ZPROFILE"
+
+            success "uv PATH updated in .zprofile"
         else
             warn "uv installation failed - you can install it manually later"
             info "Visit: https://docs.astral.sh/uv/getting-started/installation/"
