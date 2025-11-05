@@ -78,6 +78,7 @@ echo
 KITTY_CONFIG_DIR="${HOME}/.config/kitty"
 KITTY_CONFIG_FILE="${KITTY_CONFIG_DIR}/kitty.conf"
 SOURCE_KITTY="${SCRIPT_DIR}/configs/kitty.conf"
+SOURCE_ASHEN_THEME="${SCRIPT_DIR}/configs/ashen-theme.conf"
 
 # Marker definitions for managed configuration block
 BEGIN_MARKER="# BEGIN shell-setup"
@@ -195,6 +196,26 @@ else
         success "Kitty configuration deployed with markers"
         info "You can add custom settings before BEGIN or after END markers"
     fi
+fi
+
+echo
+
+# --- Deploy Ashen Theme ---
+info "Setting up Ashen theme for Kitty..."
+
+ASHEN_THEME_FILE="${KITTY_CONFIG_DIR}/ashen-theme.conf"
+
+if [ ! -f "$SOURCE_ASHEN_THEME" ]; then
+    warn "Ashen theme not found at $SOURCE_ASHEN_THEME - skipping theme"
+elif [ ! -s "$SOURCE_ASHEN_THEME" ]; then
+    warn "Ashen theme is empty at $SOURCE_ASHEN_THEME - skipping theme"
+else
+    # Create config directory if it doesn't exist
+    mkdir -p "$KITTY_CONFIG_DIR"
+
+    # Copy theme file (overwrites if exists)
+    cp "$SOURCE_ASHEN_THEME" "$ASHEN_THEME_FILE"
+    success "Ashen theme deployed to $ASHEN_THEME_FILE"
 fi
 
 echo

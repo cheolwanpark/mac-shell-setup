@@ -1,6 +1,6 @@
 # ~/.config/helix/config.toml
 
-theme = "default"
+theme = "Ashen"
 
 [editor]
 line-number = "absolute"

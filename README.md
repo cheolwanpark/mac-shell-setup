@@ -68,6 +68,7 @@ exec zsh
 
 - **Kitty** - GPU-accelerated terminal emulator
 - **Fonts** - MesloLGS NF (nerd font), D2Coding (CJK support)
+- **Theme** - [Ashen theme](https://github.com/helix-editor/helix/wiki/Themes#ashen) for both Helix and Kitty
 
 ## Key Shortcuts
 
