@@ -16,10 +16,13 @@ cd shell-setup
 # 1. Core setup (required) - installs dev tools and shell environment
 ./setup.sh
 
-# 2. AI coding agents (optional) - installs Claude Code, Gemini CLI, Codex
+# 2. Language servers (optional) - adds IDE features to Helix
+./install_languages.sh
+
+# 3. AI coding agents (optional) - installs Claude Code, Gemini CLI, Codex
 ./install_agents.sh
 
-# 3. Kitty terminal (optional, desktop only - NOT for servers)
+# 4. Kitty terminal (optional, desktop only - NOT for servers)
 ./install_kitty.sh
 
 # Restart your shell
@@ -57,6 +60,25 @@ exec zsh
 
 **Helper Scripts:**
 - **tm** - Tmux session manager (`tm` or `tm <session-name>`)
+
+### Language Servers (install_languages.sh)
+
+Adds IDE-like features to Helix editor including autocomplete, diagnostics, go-to-definition, and type hints.
+
+**Toolchains:**
+- **uv** - Python package manager
+- **nvm** - Node.js version manager
+- **rustup** - Rust toolchain installer
+
+**Language Servers by Language:**
+- **Rust** - rust-analyzer (code completion, type hints, inline diagnostics)
+- **Python** - ruff (fast linter/formatter), pyright (type checking)
+- **TypeScript/JavaScript** - typescript-language-server (IntelliSense, refactoring)
+- **C/C++** - clangd (code navigation, compile diagnostics)
+- **Markdown** - marksman (link checking, document outline)
+- **JSON** - vscode-json-language-server (schema validation)
+- **Docker** - dockerfile-language-server (linting, auto-completion)
+- **TOML** - taplo (formatting, validation)
 
 ### AI Agents (install_agents.sh)
 
