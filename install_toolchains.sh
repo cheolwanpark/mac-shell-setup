@@ -136,9 +136,36 @@ else
         if curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y; then
             success "rustup installed successfully"
 
-            # rustup installs to ~/.cargo/bin
+            # rustup installs to ~/.cargo/bin and creates ~/.cargo/env
             CARGO_ENV="$HOME/.cargo/env"
             if [ -f "$CARGO_ENV" ]; then
+                # Ensure cargo env is sourced in .zprofile
+                ZPROFILE="${HOME}/.zprofile"
+                touch "$ZPROFILE"
+
+                # Define markers for idempotent updates
+                BEGIN_MARKER="# BEGIN mac-shell-setup: cargo"
+                END_MARKER="# END mac-shell-setup: cargo"
+
+                # Check if our section already exists
+                if grep -q "$BEGIN_MARKER" "$ZPROFILE"; then
+                    info "Updating existing cargo section in .zprofile..."
+                    # Remove old section
+                    awk "/$BEGIN_MARKER/,/$END_MARKER/{next} 1" "$ZPROFILE" > "${ZPROFILE}.tmp"
+                    mv "${ZPROFILE}.tmp" "$ZPROFILE"
+                else
+                    info "Adding cargo environment to .zprofile..."
+                fi
+
+                # Append new section with markers
+                {
+                    echo ""
+                    echo "$BEGIN_MARKER"
+                    echo ". \"\$HOME/.cargo/env\""
+                    echo "$END_MARKER"
+                } >> "$ZPROFILE"
+
+                success "Cargo environment added to .zprofile"
                 success "Cargo environment will be available after shell restart"
             fi
         else

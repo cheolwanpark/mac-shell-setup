@@ -216,6 +216,15 @@ if [ -d "$CARGO_BIN" ]; then
             warn "Failed to create rust-analyzer symlink"
         fi
     fi
+
+    # Verify rust-analyzer is accessible
+    if command -v rust-analyzer &>/dev/null; then
+        success "rust-analyzer is accessible in PATH"
+    else
+        warn "rust-analyzer symlink exists but is not in PATH"
+        info "Make sure ~/.cargo/bin is in your PATH"
+        info "Add this to ~/.zprofile: . \"\$HOME/.cargo/env\""
+    fi
 fi
 echo
 
