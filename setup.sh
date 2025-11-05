@@ -110,18 +110,6 @@ else
     warn "Image tools installation failed - check output above"
 fi
 echo
-
-info "Adding Homebrew fonts tap..."
-brew tap homebrew/cask-fonts 2>/dev/null || true
-
-info "Installing Nerd Font for terminal icons..."
-if brew install --cask font-symbols-only-nerd-font; then
-    success "Nerd Font ready"
-else
-    warn "Font installation failed - check output above"
-fi
-
-echo
 success "Development tools installation complete!"
 echo
 
@@ -278,25 +266,6 @@ else
     fi
 fi
 
-echo
-
-# --- Font Installation ---
-info "Installing Meslo Nerd Font for powerlevel10k..."
-
-info "Adding Homebrew fonts tap..."
-brew tap homebrew/cask-fonts 2>/dev/null || true
-
-if brew install --cask font-meslo-for-powerlevel10k; then
-    success "Meslo Nerd Font installed"
-else
-    warn "Font installation failed - you may need to install it manually"
-fi
-
-echo
-info "Font installed. Configure your terminal to use it:"
-info "  - iTerm2/Terminal: Preferences → Profiles → Text → Font → MesloLGS NF"
-info "  - VSCode: Settings → Terminal › Integrated: Font Family → 'MesloLGS NF'"
-info "  - Kitty: Already configured if using configs/kitty.conf"
 echo
 
 # --- Shell Change Instructions ---
@@ -481,7 +450,6 @@ echo
 info "What was set up:"
 echo "  ✓ Homebrew and development tools"
 echo "  ✓ Zsh with oh-my-zsh and powerlevel10k"
-echo "  ✓ Meslo Nerd Font for terminal icons"
 echo "  ✓ Helix, Tmux, and Zsh configurations"
 echo "  ✓ Scripts deployed to ~/scripts"
 echo
@@ -490,10 +458,10 @@ echo "  • ./install_agents.sh  - Install AI coding assistants (Claude Code, Ge
 echo "  • ./install_kitty.sh   - Install Kitty terminal with configuration"
 echo
 info "Next steps:"
-echo "  1. Configure your terminal to use the Meslo Nerd Font (see instructions above)"
-echo "  2. If you changed the default shell, log out and log back in"
-echo "  3. Run 'source ~/.zprofile' to load PATH updates"
-echo "  4. Run 'exec zsh' to start using zsh immediately"
+echo "  1. If you changed the default shell, log out and log back in"
+echo "  2. Run 'source ~/.zprofile' to load PATH updates"
+echo "  3. Run 'exec zsh' to start using zsh immediately"
+echo "  4. (Optional) Run ./install_kitty.sh to install terminal with fonts"
 echo "  5. (Optional) Run additional setup scripts as needed"
 echo
 info "Useful commands:"
