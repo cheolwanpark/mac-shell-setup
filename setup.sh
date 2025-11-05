@@ -19,11 +19,81 @@ echo "  macOS Development Environment Setup"
 echo "============================================"
 echo
 info "This script will install:"
+echo "  • Xcode Command Line Tools (if not already installed)"
+echo "  • Rosetta 2 (Apple Silicon Macs only)"
 echo "  • Homebrew (if not already installed)"
 echo "  • Development tools (tmux, yazi, lazygit, helix, etc.)"
 echo "  • Zsh with oh-my-zsh and powerlevel10k theme"
 echo
 info "Starting setup..."
+echo
+
+# ============================================================================
+# Part 0: Essential Prerequisites (Xcode CLI Tools & Rosetta 2)
+# ============================================================================
+
+# --- Install Xcode Command Line Tools ---
+info "Checking Xcode Command Line Tools installation..."
+
+if xcode-select -p &>/dev/null; then
+    success "Xcode Command Line Tools already installed at $(xcode-select -p)"
+else
+    info "Installing Xcode Command Line Tools..."
+    info "A dialog will appear - please click 'Install' and wait for completion"
+    echo
+
+    # Trigger the installation dialog
+    xcode-select --install
+
+    # Wait for installation to complete
+    info "Waiting for Xcode Command Line Tools installation to complete..."
+    until xcode-select -p &>/dev/null; do
+        sleep 5
+    done
+
+    success "Xcode Command Line Tools installed successfully"
+fi
+
+# Verify installation
+if gcc --version &>/dev/null && git --version &>/dev/null; then
+    success "Xcode Command Line Tools verified (gcc and git available)"
+else
+    error "Xcode Command Line Tools installation appears incomplete"
+fi
+
+echo
+
+# --- Install Rosetta 2 (Apple Silicon only) ---
+info "Checking if Rosetta 2 is needed..."
+
+# Detect architecture
+ARCH=$(uname -m)
+
+if [ "$ARCH" = "arm64" ]; then
+    info "Apple Silicon Mac detected - checking Rosetta 2..."
+
+    # Check if Rosetta 2 is installed
+    if /usr/bin/pgrep -q oahd; then
+        success "Rosetta 2 is already installed"
+    else
+        info "Installing Rosetta 2..."
+        info "This allows running Intel-based applications on Apple Silicon"
+        echo
+
+        if softwareupdate --install-rosetta --agree-to-license; then
+            success "Rosetta 2 installed successfully"
+        else
+            warn "Rosetta 2 installation failed or was cancelled"
+            warn "Some Intel-based tools may not work properly"
+            info "You can install it manually later with: softwareupdate --install-rosetta"
+        fi
+    fi
+else
+    info "Intel Mac detected - Rosetta 2 not needed"
+fi
+
+echo
+success "Essential prerequisites check complete!"
 echo
 
 # ============================================================================

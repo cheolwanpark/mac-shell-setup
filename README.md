@@ -5,7 +5,7 @@ Automated development environment setup with modern CLI tools and integrated wor
 ## Prerequisites
 
 - macOS (Intel or Apple Silicon)
-- Homebrew installed ([install here](https://brew.sh))
+- No prerequisites needed - the setup script will install everything including Xcode Command Line Tools and Rosetta 2 (Apple Silicon only)
 
 ## Installation
 
@@ -29,6 +29,11 @@ exec zsh
 ## What Gets Installed
 
 ### Core Tools (setup.sh)
+
+**Essential Prerequisites:**
+- **Xcode Command Line Tools** - Compilers (gcc, clang), build tools, and Git
+- **Rosetta 2** - Intel app compatibility layer (Apple Silicon Macs only)
+- **Homebrew** - Package manager for macOS
 
 **Terminal & Shell:**
 - **tmux** - Terminal multiplexer for managing sessions
