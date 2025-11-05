@@ -200,18 +200,23 @@ else
         FAILED+=("rust-analyzer")
     fi
 fi
+echo
 
-# Ensure rust-analyzer symlink exists in cargo bin
+# Ensure rust-analyzer symlink exists in cargo bin (regardless of whether it was just installed)
+info "Checking rust-analyzer symlink..."
 CARGO_BIN="$HOME/.cargo/bin"
-if [ -d "$CARGO_BIN" ] && ! [ -e "$CARGO_BIN/rust-analyzer" ]; then
-    info "Creating rust-analyzer symlink..."
-    if ln -sf rustup "$CARGO_BIN/rust-analyzer"; then
-        success "rust-analyzer symlink created"
+if [ -d "$CARGO_BIN" ]; then
+    if [ -e "$CARGO_BIN/rust-analyzer" ]; then
+        success "rust-analyzer symlink exists"
     else
-        warn "Failed to create rust-analyzer symlink"
+        info "Creating rust-analyzer symlink..."
+        if ln -sf rustup "$CARGO_BIN/rust-analyzer"; then
+            success "rust-analyzer symlink created"
+        else
+            warn "Failed to create rust-analyzer symlink"
+        fi
     fi
 fi
-
 echo
 
 # taplo (cargo install)
