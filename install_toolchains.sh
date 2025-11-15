@@ -24,6 +24,7 @@ info "This script will install package managers needed for language servers:"
 echo "  • uv      - Python package installer (for ruff)"
 echo "  • nvm     - Node.js version manager (for pyright, TypeScript, JSON, Docker LSPs)"
 echo "  • rustup  - Rust toolchain (for rust-analyzer, taplo)"
+echo "  • go      - Go toolchain (for gopls, goimports, golangci-lint)"
 echo
 info "After installation, you'll need to restart your shell."
 echo
@@ -192,6 +193,66 @@ fi
 echo
 
 # ============================================================================
+# Install Go
+# ============================================================================
+
+info "Checking Go..."
+echo
+
+if command -v go &>/dev/null; then
+    GO_VERSION=$(go version 2>&1)
+    success "Go is already installed: $GO_VERSION"
+else
+    echo "Go is a programming language and toolchain."
+    echo "It will be used to install: gopls, goimports, golangci-lint"
+    echo
+    read -p "Install Go? (y/n) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        info "Installing Go via Homebrew..."
+        if brew install go; then
+            success "Go installed successfully"
+
+            # Go installs binaries to $HOME/go/bin by default
+            ZPROFILE="${HOME}/.zprofile"
+            touch "$ZPROFILE"
+
+            # Define markers for idempotent updates
+            BEGIN_MARKER="# BEGIN mac-shell-setup: go"
+            END_MARKER="# END mac-shell-setup: go"
+
+            # Check if our section already exists
+            if grep -q "$BEGIN_MARKER" "$ZPROFILE"; then
+                info "Updating existing Go section in .zprofile..."
+                # Remove old section
+                awk "/$BEGIN_MARKER/,/$END_MARKER/{next} 1" "$ZPROFILE" > "${ZPROFILE}.tmp"
+                mv "${ZPROFILE}.tmp" "$ZPROFILE"
+            else
+                info "Adding Go to PATH in .zprofile..."
+            fi
+
+            # Append new section with markers
+            {
+                echo ""
+                echo "$BEGIN_MARKER"
+                echo "export PATH=\"\$HOME/go/bin:\$PATH\""
+                echo "$END_MARKER"
+            } >> "$ZPROFILE"
+
+            success "Go PATH updated in .zprofile"
+        else
+            warn "Go installation failed - you can install it manually later"
+            info "Visit: https://go.dev/doc/install"
+        fi
+    else
+        warn "Skipping Go installation"
+        warn "Without Go, Go tools (gopls, goimports, golangci-lint) won't be installed"
+    fi
+fi
+
+echo
+
+# ============================================================================
 # Summary
 # ============================================================================
 
@@ -229,6 +290,14 @@ else
     MISSING_COUNT=$((MISSING_COUNT + 1))
 fi
 
+if command -v go &>/dev/null; then
+    echo "  ✓ go      - Go toolchain"
+    INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
+else
+    echo "  ✗ go      - Not installed"
+    MISSING_COUNT=$((MISSING_COUNT + 1))
+fi
+
 echo
 info "Summary: $INSTALLED_COUNT installed, $MISSING_COUNT skipped"
 echo
@@ -254,6 +323,7 @@ else
     echo "  • uv:     https://docs.astral.sh/uv/"
     echo "  • nvm:    https://github.com/nvm-sh/nvm"
     echo "  • rustup: https://rustup.rs/"
+    echo "  • go:     https://go.dev/doc/install"
     echo
 fi
 

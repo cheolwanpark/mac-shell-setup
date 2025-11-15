@@ -23,6 +23,7 @@ echo "  • Rust        - rust-analyzer"
 echo "  • Python      - ruff, pyright"
 echo "  • TypeScript  - typescript-language-server"
 echo "  • JavaScript  - typescript-language-server"
+echo "  • Go          - gopls, goimports, golangci-lint"
 echo "  • C/C++       - clangd"
 echo "  • Markdown    - marksman"
 echo "  • JSON        - vscode-json-language-server"
@@ -65,6 +66,16 @@ if command -v rustup &>/dev/null; then
 else
     warn "rustup not found"
     echo "Please install rustup first by running: ./install_toolchains.sh"
+    PREREQUISITES_OK=false
+fi
+
+# Check Go
+if command -v go &>/dev/null; then
+    GO_VERSION=$(go version 2>&1)
+    success "go found: $GO_VERSION"
+else
+    warn "go not found"
+    echo "Please install Go first by running: ./install_toolchains.sh"
     PREREQUISITES_OK=false
 fi
 
@@ -111,6 +122,12 @@ success "Node.js $NODE_VERSION, npm $NPM_VERSION"
 
 CARGO_VERSION=$(cargo --version 2>&1)
 success "cargo $CARGO_VERSION"
+
+# Ensure Go bin is in PATH
+export PATH="$HOME/go/bin:$PATH"
+
+GO_BIN_VERSION=$(go version 2>&1)
+success "go $GO_BIN_VERSION"
 
 echo
 
@@ -232,6 +249,19 @@ echo
 install_tool "taplo" "taplo" "cargo install taplo-cli --locked --features lsp" "TOML LSP"
 
 # ============================================================================
+# Go Language Servers and Tools (via go install)
+# ============================================================================
+
+info "Installing Go language servers and tools via go install..."
+echo
+
+install_tool "gopls" "gopls" "go install golang.org/x/tools/gopls@latest" "Go LSP"
+
+install_tool "goimports" "goimports" "go install golang.org/x/tools/cmd/goimports@latest" "Go imports formatter"
+
+install_tool "golangci-lint" "golangci-lint" "go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest" "Go linter"
+
+# ============================================================================
 # System Language Servers (via Homebrew/System)
 # ============================================================================
 
@@ -329,6 +359,9 @@ check_binary "rust-analyzer" "rust-analyzer" && VERIFIED=$((VERIFIED + 1)) || MI
 check_binary "ruff" "ruff" && VERIFIED=$((VERIFIED + 1)) || MISSING=$((MISSING + 1))
 check_binary "pyright" "pyright" && VERIFIED=$((VERIFIED + 1)) || MISSING=$((MISSING + 1))
 check_binary "typescript-language-server" "typescript-language-server" && VERIFIED=$((VERIFIED + 1)) || MISSING=$((MISSING + 1))
+check_binary "gopls" "gopls" && VERIFIED=$((VERIFIED + 1)) || MISSING=$((MISSING + 1))
+check_binary "goimports" "goimports" && VERIFIED=$((VERIFIED + 1)) || MISSING=$((MISSING + 1))
+check_binary "golangci-lint" "golangci-lint" && VERIFIED=$((VERIFIED + 1)) || MISSING=$((MISSING + 1))
 check_binary "clangd" "clangd" && VERIFIED=$((VERIFIED + 1)) || MISSING=$((MISSING + 1))
 check_binary "marksman" "marksman" && VERIFIED=$((VERIFIED + 1)) || MISSING=$((MISSING + 1))
 check_binary "vscode-json-language-server" "vscode-json-language-server" && VERIFIED=$((VERIFIED + 1)) || MISSING=$((MISSING + 1))
@@ -377,7 +410,7 @@ info "Next steps:"
 echo "============================================"
 echo
 echo "1. Verify language servers are working:"
-echo "   hx --health rust python typescript c json"
+echo "   hx --health rust python typescript go c json"
 echo
 echo "2. Test by opening a file:"
 echo "   hx test.py"
