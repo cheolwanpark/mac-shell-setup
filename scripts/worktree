@@ -26,13 +26,12 @@ cleanup() {
     fi
 
     echo ""
-    echo -n "Delete worktree and branch '$BRANCH_NAME'? [y/N] "
+    echo -n "Delete worktree '$BRANCH_NAME'? [y/N] "
     read response
     if [[ "$response" =~ ^[Yy]$ ]]; then
         git worktree remove --force "$WORKTREE_PATH" 2>/dev/null || true
-        git branch -D "$BRANCH_NAME" 2>/dev/null || true
         rmdir "$TEMP_DIR" 2>/dev/null || true
-        echo "Worktree and branch removed."
+        echo "Worktree removed (branch '$BRANCH_NAME' kept)."
     else
         echo "Worktree kept at: $WORKTREE_PATH"
     fi
